@@ -1,0 +1,100 @@
+{% extends 'layouts.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>User Record</h1>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-3">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" class="form-control" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class="form-control" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <label><input type="radio" name="gender" value="male">Male</label>
+                    <label><input type="radio" name="gender" value="female">Female</label>
+                </div>
+                <div class="form-group">
+                    <label for="language">Language</label>
+                    <label><input type="checkbox" name="language" value="nepali">Nepali</label>
+                    <label><input type="checkbox" name="language" value="english">English</label>
+                    <label><input type="checkbox" name="language" value="chinese">Chinese</label>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select name="country" id="country" class="form-control">
+                        <option value="nepal">Nepal</option>
+                        <option value="china">China</option>
+                        <option value="us">Us</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="image">Image</label> <br>
+                    <input type="file" name="image">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success">Add record</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-9">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>S.n</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Language</th>
+                    <th>Country</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in userData %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.gender }}</td>
+                        <td>
+                            {% for language in user.get_language %}
+                                {{ language }}
+                            {% endfor %}
+                        </td>
+                        <td>{{ user.country }}</td>
+                        <td>
+                            {% if user.image %}
+                                <img src="{{ user.image.url }}" width="30" alt="">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'edit' user.id %}">Edit</a>
+                            <a href="{% url 'delete' user.id %}">Delete</a>
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock content %}
